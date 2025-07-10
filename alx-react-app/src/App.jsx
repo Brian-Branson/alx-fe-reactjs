@@ -6,6 +6,8 @@ import WelcomeMessage from './components/WelcomeMessage.jsx'
 import Header from './components/Header.jsx';
 import MainContent from './components/MainContent.jsx';
 import Footer from './components/Footer.jsx';
+import UserProfile from './components/UserProfile.jsx'
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -32,6 +34,7 @@ function App() {
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
+      <UserProfile name="Alice" age="25" bio="Loves hiking and photography" />
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
