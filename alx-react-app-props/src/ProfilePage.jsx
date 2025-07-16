@@ -1,4 +1,4 @@
-import UserInfo from './UserInfo';
+import UserInfo from './src/Userinfo';
 
 function ProfilePage() {
   return <UserInfo />;
