@@ -1,4 +1,5 @@
-  import { useRecipeStore } from './recipeStore';
+  import RecipeDetails from './RecipeDetails';
+import { useRecipeStore } from './recipeStore';
 
   const RecipeList = () => {
     const recipes = useRecipeStore(state => state.recipes);
@@ -9,6 +10,8 @@
           <div key={recipe.id}>
             <h3>{recipe.title}</h3>
             <p>{recipe.description}</p>
+            <RecipeDetails recipeId={recipe.id} onBack={() => console.log('Back to list')} />
+            <hr />
           </div>
         ))}
       </div>
