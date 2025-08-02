@@ -9,7 +9,7 @@ export async function fetchUserData(username) {
 
 /**
  * Advanced user search using GitHub Search API.
- * @param {Object} criteria - Search criteria (e.g., { location: 'Lagos', repos: '>10', language: 'JavaScript' })
+ * @param {Object} criteria - Search criteria (e.g., { location: 'Lagos', repos: '>10', minRepos: 10, language: 'JavaScript' })
  * @returns {Promise<Object>} - Search results
  */
 export async function searchUsers(criteria = {}) {
@@ -23,6 +23,9 @@ export async function searchUsers(criteria = {}) {
   }
   if (criteria.repos) {
     queryParts.push(`repos:${criteria.repos}`);
+  }
+  if (criteria.minRepos) {
+    queryParts.push(`repos:>=${criteria.minRepos}`);
   }
   if (criteria.language) {
     queryParts.push(`language:${criteria.language}`);
