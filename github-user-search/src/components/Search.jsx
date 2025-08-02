@@ -1,5 +1,11 @@
 import { useState } from 'react';
 
+const fetchUserData = async (url) => {
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  return await res.json();
+};
+
 const fetchUserList = async (username, location, minRepos, page = 1) => {
   let query = username ? `${username} in:login` : '';
   if (location) query += ` location:${location}`;
@@ -9,14 +15,12 @@ const fetchUserList = async (username, location, minRepos, page = 1) => {
   );
   if (!res.ok) throw new Error();
   const data = await res.json();
-  // Fetch detailed info for each user in parallel
+
+  // Use fetchUserData instead of inlined fetch
   const userDetails = await Promise.all(
-    (data.items || []).map(async (item) => {
-      const userRes = await fetch(item.url);
-      if (!userRes.ok) return null;
-      return await userRes.json();
-    })
+    (data.items || []).map((item) => fetchUserData(item.url))
   );
+
   return {
     users: userDetails.filter(Boolean),
     totalCount: data.total_count,
