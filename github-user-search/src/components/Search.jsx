@@ -1,5 +1,11 @@
 import { useState } from 'react';
 
+const fetchUserData = async (username) => {
+  const res = await fetch(`https://api.github.com/users/${username}`);
+  if (!res.ok) throw new Error();
+  return await res.json();
+};
+
 const Search = ({ onSearch }) => {
   const [username, setUsername] = useState('');
   const [user, setUser] = useState(null);
@@ -13,9 +19,7 @@ const Search = ({ onSearch }) => {
     setUser(null);
 
     try {
-      const res = await fetch(`https://api.github.com/users/${username}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
+      const data = await fetchUserData(username);
       setUser(data);
     } catch {
       setError(true);
