@@ -1,47 +1,41 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
-const fetchPosts = async () => {
+async function fetchPosts() {
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-  if (!res.ok) throw new Error("Network error");
+  if (!res.ok) throw new Error("Failed to fetch posts");
   return res.json();
-};
+}
 
 export default function PostsComponent() {
-  const [enabled, setEnabled] = useState(true);
-  const { data, isLoading, isFetching, error, refetch } = useQuery({
+  const {
+    data: posts,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
-    enabled,
-    staleTime: 1000 * 60, // 1 minute: shows caching behavior
+    cacheTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false, 
+    keepPreviousData: true,
   });
 
+  if (isLoading) return <p>Loading posts...</p>;
+  if (isError) return <p className="text-red-500">Error: {error.message}</p>;
+
   return (
-    <section style={{ display: "grid", gap: 12 }}>
-      <div style={{ display: "flex", gap: 8 }}>
-        <button onClick={() => refetch()}>Refetch Posts</button>
-        <button onClick={() => setEnabled((e) => !e)}>
-          {enabled ? "Disable" : "Enable"} Query
-        </button>
-      </div>
-
-      {isLoading && <p>Loading…</p>}
-      {error && <p style={{ color: "crimson" }}>{error.message}</p>}
-
-      {data && (
-        <>
-          <p>{isFetching ? "Updating…" : "Up to date."}</p>
-          <ul>
-            {data.slice(0, 10).map((p) => (
-              <li key={p.id}>
-                <strong>{p.id}.</strong> {p.title}
-              </li>
-            ))}
-          </ul>
-          <small>Navigate away and back to see cached data load instantly.</small>
-        </>
-      )}
-    </section>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Posts</h2>
+      <ul className="space-y-2">
+        {posts.map((post) => (
+          <li key={post.id} className="border p-3 rounded bg-gray-50">
+            <h3 className="font-semibold">{post.title}</h3>
+            <p className="text-sm text-gray-700">{post.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
-["isError"]
+ ["isError"]
