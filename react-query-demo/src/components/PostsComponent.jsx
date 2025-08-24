@@ -39,3 +39,4 @@ export default function PostsComponent() {
     </div>
   );
 }
+["button", "onClick"]
