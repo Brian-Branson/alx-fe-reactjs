@@ -1,87 +1,57 @@
+"use client";
 import { useState } from "react";
 
 export default function RegistrationForm() {
-  const [values, setValues] = useState({ username: "", email: "", password: "" });
-  const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onChange = (e) => setValues(v => ({ ...v, [e.target.name]: e.target.value }));
-
-  const validate = () => {
-    const e = {};
-    if (!values.username.trim()) e.username = "Username is required";
-    if (!values.email.trim()) e.email = "Email is required";
-    if (!values.password.trim()) e.password = "Password is required";
-    return e;
-  };
-
-  const onSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const eobj = validate();
-    setErrors(eobj);
-    if (Object.keys(eobj).length) return;
-
-    try {
-      setStatus("submitting");
-      const res = await fetch("https://jsonplaceholder.typicode.com/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      const data = await res.json();
-      setStatus("success");
-      alert("Registered (mock): " + JSON.stringify(data, null, 2));
-      setValues({ username: "", email: "", password: "" });
-    } catch (err) {
-      setStatus("error");
-      console.error(err);
-    }
+    console.log({ username, email, password });
+    // later: call your backend signup API here
   };
 
   return (
-    <form onSubmit={onSubmit} style={{ display: "grid", gap: 12 }}>
-      <label>
-        Username
-        <input
-          name="username"
-          value={values.username}
-          onChange={onChange}
-          placeholder="jane_doe"
-          style={{ width: "100%", padding: 8 }}
-        />
-        {errors.username && <small style={{ color: "crimson" }}>{errors.username}</small>}
-      </label>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 p-6 max-w-md mx-auto bg-white rounded-2xl shadow"
+    >
+      <h2 className="text-2xl font-bold">Sign Up</h2>
 
-      <label>
-        Email
-        <input
-          type="email"
-          name="email"
-          value={values.email}
-          onChange={onChange}
-          placeholder="jane@example.com"
-          style={{ width: "100%", padding: 8 }}
-        />
-        {errors.email && <small style={{ color: "crimson" }}>{errors.email}</small>}
-      </label>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username} // ✅ controlled
+        onChange={(e) => setUsername(e.target.value)}
+        className="border p-2 rounded"
+        required
+      />
 
-      <label>
-        Password
-        <input
-          type="password"
-          name="password"
-          value={values.password}
-          onChange={onChange}
-          placeholder="••••••••"
-          style={{ width: "100%", padding: 8 }}
-        />
-        {errors.password && <small style={{ color: "crimson" }}>{errors.password}</small>}
-      </label>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email} // ✅ controlled
+        onChange={(e) => setEmail(e.target.value)}
+        className="border p-2 rounded"
+        required
+      />
 
-      <button disabled={status === "submitting"}>Register</button>
-      {status === "submitting" && <small>Submitting…</small>}
-      {status === "success" && <small style={{ color: "green" }}>Success!</small>}
-      {status === "error" && <small style={{ color: "crimson" }}>Something went wrong.</small>}
+      <input
+        type="password"
+        placeholder="Password"
+        value={password} // ✅ controlled
+        onChange={(e) => setPassword(e.target.value)}
+        className="border p-2 rounded"
+        required
+      />
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+      >
+        Register
+      </button>
     </form>
   );
 }
